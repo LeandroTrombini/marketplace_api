@@ -28,3 +28,4 @@ Metrics/PerceivedComplexity:
 Layout/LineLength:
   Exclude:
     - 'bin/bundle'
+    - 'config/initializers/devise.rb'
