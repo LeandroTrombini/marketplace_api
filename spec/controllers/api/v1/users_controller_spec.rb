@@ -1,15 +1,16 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Api::V1::UsersController, type: :controller do
-
   before(:each) do
-    request.headers['Accept'] = 'application/vnd.marketplace.v1' 
+    request.headers['Accept'] = 'application/vnd.marketplace.v1'
   end
 
   describe 'GET /index' do
     before(:each) do
       @user = FactoryBot.create :user
-      get :show , params: { id: @user.id }, format: :json
+      get :show, params: { id: @user.id }, format: :json
     end
 
     it 'returns the information about a report on a hash' do
