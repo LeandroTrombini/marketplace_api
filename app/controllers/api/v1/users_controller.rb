@@ -5,6 +5,10 @@ module Api
     class UsersController < ApplicationController
       respond_to :json
 
+      def index
+        respond_with User.all
+      end
+
       def show
         respond_with User.find(params[:id])
       end
@@ -26,6 +30,16 @@ module Api
           render json: user, status: :ok, location: [:api, user]
         else
           render json: { errors: user.errors }, status: 422
+        end
+      end
+
+      def destroy
+        user = User.find(params[:id])
+
+        if user.destroy
+          render status: 204
+        else
+          render json: { errors: 'It was not possible to delete the user.' }, status: 422
         end
       end
 

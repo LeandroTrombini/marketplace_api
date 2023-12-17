@@ -3,18 +3,33 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::UsersController, type: :controller do
-  before(:each) do
-    request.headers['Accept'] = 'application/vnd.marketplace.v1'
-  end
+  before(:each) { request.headers['Accept'] = 'application/vnd.marketplace.v1,application/json' }
+  before(:each) { request.headers['Content-Type'] = 'application/json' }
+ 
 
   describe 'GET /index' do
     before(:each) do
       @user = FactoryBot.create :user
-      get :show, params: { id: @user.id }, format: :json
+      @user2 = FactoryBot.create :user
+      get :index
     end
 
     it 'returns the information about a report on a hash' do
-      user_response = JSON.parse(response.body, symbolize_names: true)
+      user_response = json_response
+      expect(user_response.count).to eq 2
+    end
+
+    it { should respond_with :ok }
+  end
+
+  describe 'GET #show' do
+    before(:each) do
+      @user = FactoryBot.create :user
+      get :show, params: { id: @user.id }
+    end
+
+    it 'returns the information about a report on a hash' do
+      user_response = json_response
       expect(user_response[:email]).to eq @user.email
     end
 
@@ -29,7 +44,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       end
 
       it 'renders the json representation for the user record just created' do
-        user_response = JSON.parse(response.body, symbolize_names: true)
+        user_response = json_response
         expect(user_response[:email]).to eq @user_attributes[:email]
       end
 
@@ -46,12 +61,12 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       end
 
       it 'renders an error json' do
-        user_response = JSON.parse(response.body, symbolize_names: true)
+        user_response = json_response
         expect(user_response).to have_key(:errors)
       end
 
       it 'renders the json errors on why the user could not be created' do
-        user_response = JSON.parse(response.body, symbolize_names: true)
+        user_response = json_response
         expect(user_response[:errors][:email]).to include "can't be blank"
       end
 
@@ -67,15 +82,15 @@ RSpec.describe Api::V1::UsersController, type: :controller do
           id: @user.id,
           user: { email: 'newemail@email.com' }, format: :json
         }
-
-        it 'renders the json representation for the updated user' do
-          user_response = JSON.parse(response.body, symbolize_names: true)
-
-          expect(user_response[:email]).to eq 'newemail@email.com'
-        end
-
-        it { should respond_with 200 }
       end
+
+      it 'renders the json representation for the updated user' do
+        user_response = json_response
+
+        expect(user_response[:email]).to eq 'newemail@email.com'
+      end
+
+      it { should respond_with 200 }     
     end
 
     context 'when is not upgdates' do
@@ -88,18 +103,54 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       end
 
       it 'renders an errors json' do
-        user_response = JSON.parse(response.body, symbolize_names: true)
+        user_response = json_response
         
         expect(user_response).to have_key(:errors)
       end
 
       it 'renders the json errors on why the user could not to be updated' do
-        user_response = JSON.parse(response.body, symbolize_names: true)
+        user_response = json_response
         
         expect(user_response[:errors][:email]).to include 'is invalid'
       end
 
       it { should respond_with 422 }
     end    
+  end
+
+  describe 'DELETE #destroy' do
+    before(:each) do
+      @user = FactoryBot.create(:user)
+      allow(User).to receive(:find).and_return(@user)
+    end
+  
+    context 'when the user is successfully destroyed' do
+      before(:each) do
+        allow(@user).to receive(:destroy).and_return(true)
+        delete :destroy, params: { id: @user.id }, format: :json
+      end
+  
+      it { should respond_with 204 }
+    end
+  
+    context 'when the user is not destroyed' do
+      before(:each) do
+        allow(@user).to receive(:destroy).and_return(false)
+        delete :destroy, params: { id: @user.id }, format: :json
+      end
+  
+      it 'renders an errors json' do
+        user_response = json_response
+        expect(user_response).to have_key(:errors)
+      end
+  
+      it 'renders the json errors on why the user could not be destroyed' do
+        user_response = json_response
+      
+        expect(user_response[:errors]).to include('It was not possible to delete the user.')
+      end
+  
+      it { should respond_with 422 }
+    end
   end
 end
