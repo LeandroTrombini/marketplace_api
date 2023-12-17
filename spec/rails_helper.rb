@@ -68,6 +68,10 @@ RSpec.configure do |config|
   # Filter lines from Rails gems in backtraces.
   config.filter_rails_from_backtrace!
   config.include Request::JsonHelpers, type: :controller
+  config.include Request::HeadersHelpers, type: :controller
+  config.before(:each, type: :controller) do
+    include_default_accept_headers
+  end
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 end
