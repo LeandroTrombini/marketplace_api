@@ -72,6 +72,9 @@ RSpec.configure do |config|
   config.before(:each, type: :controller) do
     include_default_accept_headers
   end
-  # arbitrary gems may also be filtered via:
+  config.before(:each, type: :request) do |example|
+    host! 'api.example.com'
+  end
+    # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 end
