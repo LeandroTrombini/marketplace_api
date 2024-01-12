@@ -9,7 +9,7 @@ class User < ApplicationRecord
   validates :email, uniqueness: { case_sensitive: true }
   validates :token, uniqueness: true
 
-  has_many :products
+  has_many :products, dependent: :destroy
 
   before_create :generate_authentication_token!
 
