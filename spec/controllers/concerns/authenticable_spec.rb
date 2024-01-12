@@ -20,22 +20,29 @@ describe Authenticable do
     end
   end
 
-    describe '#authenticate_with_token' do
+  describe '#authenticate_with_token' do
+    context 'when user is not signed in' do
       before do
-        @user = FactoryBot.create(:user)
-        request.headers['Authorization'] = @user.token     
-        allow(authentication).to receive(:request).and_return(request)
-        response.status = 401
-        response.body = { 'errors': 'Not authenticated' }.to_json       
-        allow(authentication).to receive(:response).and_return(response)
+        allow(authentication).to receive(:user_signed_in?).and_return(false)
       end
 
-      it 'render a json error messsage' do
-        expect(json_response[:errors]).to eq 'Not authenticated'
+      it 'renders a json error message' do
+        expect(authentication).to receive(:render).with(json: { errors: 'Not authenticated' }, status: :unauthorized)
+        authentication.authenticate_with_token
       end
-
-      it { should respond_with 401 }
     end
+
+    context 'when user is signed in' do
+      before do
+        allow(authentication).to receive(:user_signed_in?).and_return(true)
+      end
+
+      it 'does not render an error message' do
+        expect(authentication).not_to receive(:render)
+        authentication.authenticate_with_token
+      end
+    end
+  end
 
     describe '#user_signed_in?' do
       context "when there is a user on ' session' " do

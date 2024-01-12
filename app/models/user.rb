@@ -9,6 +9,10 @@ class User < ApplicationRecord
   validates :email, uniqueness: { case_sensitive: true }
   validates :token, uniqueness: true
 
+  has_many :products
+
+  before_create :generate_authentication_token!
+
   def generate_authentication_token!
     begin
       self.token =Devise.friendly_token      
