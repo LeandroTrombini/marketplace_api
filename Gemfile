@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby '3.0.0'
+ruby '3.2.0'
 gem 'bootsnap', require: false
 gem 'devise', '~> 4.9', '>= 4.9.2'
 gem 'multi_json'
