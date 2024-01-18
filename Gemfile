@@ -3,6 +3,7 @@
 source 'https://rubygems.org'
 
 ruby '3.2.0'
+gem 'active_model_serializers', '~> 0.10.0'
 gem 'bootsnap', require: false
 gem 'devise', '~> 4.9', '>= 4.9.2'
 gem 'multi_json'

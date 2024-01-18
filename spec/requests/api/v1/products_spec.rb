@@ -133,19 +133,22 @@ RSpec.describe 'api/v1/products', type: :request do
         run_test!
       end
 
-      # response '422', 'invalid product' do
-      #   let!(:id) { FactoryBot.create(:product).id }
-      #   let!(:body) do
-      #     {
-      #       'product': {
-      #         'title': 'Smart Tv',
-      #         'price': 'two hundred'
-      #       }
-      #     }
-      #   end
-      #   let!(:Authorization) { FactoryBot.create(:user).token }
-      #   run_test!
-      # end
+      response '422', 'invalid product' do
+        let!(:'Authorization') do
+          @user = FactoryBot.create(:user)
+          @user.token
+        end
+        let!(:id) { FactoryBot.create(:product, user: @user).id }
+        let!(:body) do
+          {
+            'product': {
+              'title': 'Smart Tv',
+              'price': 'two hundred'
+            }
+          }
+        end        
+        run_test!
+      end
     end
   end
 
