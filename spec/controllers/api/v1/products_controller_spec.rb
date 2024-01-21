@@ -10,7 +10,7 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
     it 'returns the information about a reporter on a hash' do
       product_response = json_response
       expect(product_response[:title]).to eq @product.title
-    end
+    end    
 
     it 'has the user as a embeded object' do
       product_response = json_response
