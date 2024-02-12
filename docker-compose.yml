@@ -21,8 +21,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_HOST:db
-      - POSTGRES_USER=trombini
-      - POSTGRES_PASSWORD=Tr0mb1n1
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=marketplace_api_development 
     networks:
       - defaultNetwork

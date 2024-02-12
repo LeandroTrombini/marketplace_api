@@ -30,8 +30,16 @@ $ rails server
 With docker 
 
 ```shell
-$ docker-compose up -d
+$ docker-compose up 
 ```
+
+Run tests
+
+```shell
+$ docker-compose run app rspec
+```
+
+
 
 Access the link for the documentation of the endpoints. [Link API Doc](http://api.lvh.me:3000/api-docs/index.html)
 
@@ -64,7 +72,11 @@ With docker
 ```shell
 $ docker-compose run app rake rswag:specs:swaggerize
 ```
+### Address example
 
+```shell
+$ http://api.lvh.me:3000/users/1
+```
 ### Deploying / Publishing
 
 In case there's some step you have to take that publishes this project to a
