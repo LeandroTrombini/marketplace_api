@@ -10,12 +10,14 @@ class User < ApplicationRecord
   validates :token, uniqueness: true
 
   has_many :products, dependent: :destroy
+  has_many :orders, dependent: :destroy
 
   before_create :generate_authentication_token!
 
   def generate_authentication_token!
-    begin
-      self.token =Devise.friendly_token      
-    end while self.class.exists?(token: token)
+    loop do
+      self.token = Devise.friendly_token
+      break unless self.class.exists?(token:)
+    end
   end
 end
