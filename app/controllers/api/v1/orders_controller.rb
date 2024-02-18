@@ -15,6 +15,21 @@ module Api
       def show
         respond_with order: current_user.orders.find(params[:id])
       end
+
+      # POST /orders
+      def create
+        order = current_user.orders.build(order_params)
+
+        return render json: { errors: order.errors }, status: 422 unless order.save
+
+        render json: { order: }, status: 201
+      end
+
+      private
+
+      def order_params
+        params.require(:order).permit(product_ids: [])
+      end
     end
   end
 end
