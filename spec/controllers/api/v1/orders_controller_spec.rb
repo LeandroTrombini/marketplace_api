@@ -21,8 +21,14 @@ RSpec.describe Api::V1::OrdersController, type: :controller do
     before(:each) do
       current_user = FactoryBot.create(:user)
       api_authorization_header(current_user.token)
-      @order = FactoryBot.create(:order, user: current_user)
-      get :show, params: { user_id: current_user.id, id: @order.id }
+      @product = FactoryBot.create(:product)
+      @order = FactoryBot.create(:order, user: current_user)      
+      get :show, params: { user_id: current_user.id, id: @order.id, product_ids: [@product.id]}
+    end
+
+    it 'returns the total for the order payload' do
+      order_response = json_response[:order]
+      expect(order_response[:total]).to eq(@order.total.to_s)
     end
 
     it 'returns the user order record matching the id' do
