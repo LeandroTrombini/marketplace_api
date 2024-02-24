@@ -22,6 +22,7 @@ module Api
 
         return render json: { errors: order.errors }, status: 422 unless order.save
 
+        OrderMailer.send_confirmation(order).deliver_now
         render json: { order: }, status: 201
       end
 
