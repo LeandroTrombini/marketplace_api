@@ -7,9 +7,19 @@ class Order < ApplicationRecord
 
   belongs_to :user
   has_many :placements
-  has_many :products, through: :placements  
+  has_many :products, through: :placements
 
   def set_total!
-    self.total = products.map(&:price).sum
+    self.total = 0
+    placements.each do |placement|
+      self.total += placement.product.price * placement.quantity
+    end
+  end
+
+  def build_placements_with_product_ids_and_quantities(product_ids_quantities)
+    product_ids_quantities.each do |product_ids_quantitiy|
+      id, quantity = product_ids_quantitiy
+      placements.build(product_id: id, quantity:)
+    end
   end
 end

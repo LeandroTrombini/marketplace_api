@@ -24,13 +24,32 @@ RSpec.describe Order, type: :model do
 
   describe '#set_total!' do
     before(:each) do
-      product1 = FactoryBot.create(:product, price: 100)
-      product2 = FactoryBot.create(:product, price: 85)      
-      @order = FactoryBot.build(:order, product_ids: [product1.id, product2.id])    
-    end
+      product_1 = FactoryBot.create(:product, price: 100)
+      product_2 = FactoryBot.create(:product, price: 85)
 
-    it 'returns the total amount to pay for the products' do
-      expect{@order.set_total!}.to change{@order.total}.from(0).to(185)
+      placement_1 = FactoryBot.build(:placement, product: product_1, quantity: 3)
+      placement_2 = FactoryBot.build(:placement, product: product_2, quantity: 15)
+
+      @order = FactoryBot.build(:order)
+
+      @order.placements.push(placement_1)
+      @order.placements.push(placement_2)
     end
-  end 
+    
+    it 'returns the total amount to pay for the products' do
+      expect{@order.set_total!}.to change{@order.total}.from(0).to(1575)
+    end
+  end
+
+  describe '#build_placements_with_product_ids_and_quantities' do
+    let!(:product1) { FactoryBot.create(:product, price: 100, quantity: 5) }
+    let!(:product2) { FactoryBot.create(:product, price: 85, quantity: 10) }
+    let!(:product_ids_quantities) { [[product1.id, 2], [product2.id, 3]] }
+
+    it "builds 2 placements for the order" do
+      expect {
+        order.build_placements_with_product_ids_and_quantities(product_ids_quantities)
+      }.to change { order.placements.size }.from(0).to(2)
+    end
+  end
 end

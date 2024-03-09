@@ -1,15 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe Product, type: :model do
-  let(:product) { FactoryBot.build :product }
-  subject { product }
-
-  it { should respond_to(:title) }
-  it { should respond_to(:price) }
-  it { should respond_to(:description) }
-  it { should respond_to(:published) }
-  it { should respond_to(:user_id) }
-
+RSpec.describe Product, type: :model do 
+  describe 'respond_to' do
+    it { should respond_to(:title) }
+    it { should respond_to(:price) }
+    it { should respond_to(:description) }
+    it { should respond_to(:published) }
+    it { should respond_to(:user_id) }
+  end
   # it { should not_be_published }
 
   describe 'validations' do

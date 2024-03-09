@@ -45,13 +45,18 @@ RSpec.describe Api::V1::OrdersController, type: :controller do
       api_authorization_header(current_user.token)
       product1 = FactoryBot.create(:product)
       product2 = FactoryBot.create(:product)
-      order_params = { product_ids: [product1.id, product2.id]}
+      order_params = { product_ids_and_quantities: [[product1.id, 2], [product2.id, 4]]}
       post :create, params: { user_id: current_user.id, order: order_params }
     end
 
     it 'returns the just user order record' do
       order_response = json_response[:order]
       expect(order_response[:id]).to be_present
+    end
+
+    it 'embeds the two products objects related to the order' do
+      order_response = json_response[:products]
+      expect(order_response.size).to eq(2)
     end
 
     it { should respond_with 201 }
