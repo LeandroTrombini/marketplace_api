@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 class Order < ApplicationRecord
+  include ActiveModel::Validations
+
   before_validation :set_total!, if: -> { (total.nil? || total.zero?) && products.any? }
   validates :user_id, presence: true
   validates :total, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates_with EnoughProductsValidator
 
   belongs_to :user
   has_many :placements
