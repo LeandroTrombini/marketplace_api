@@ -6,6 +6,7 @@ ruby '3.2.0'
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'bootsnap', require: false
 gem 'devise', '~> 4.9', '>= 4.9.2'
+gem 'kaminari'
 gem 'multi_json'
 gem 'pg', '~> 1.1'
 gem 'puma', '>= 5.0'

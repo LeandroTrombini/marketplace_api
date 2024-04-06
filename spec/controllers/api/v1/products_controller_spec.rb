@@ -32,16 +32,21 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
 
       it 'returns the list of records from the database' do
         product_response = json_response
-        expect(product_response.count).to eq 5
+        expect(product_response[:products].count).to eq 5
       end
   
       it 'returns the user object into each product' do
-        product_response = json_response
+        product_response = json_response[:products]
         product_response.each do |pr|
           expect(pr[:user]).to be_present
         end
       end
-  
+
+      it { expect(json_response).to have_key(:meta) }
+      it { expect(json_response[:meta]).to have_key(:pagination)}
+      it { expect(json_response[:meta][:pagination]).to have_key(:per_page)}
+      it { expect(json_response[:meta][:pagination]).to have_key(:total_pages)}
+      it { expect(json_response[:meta][:pagination]).to have_key(:total_objects)}  
       it { should respond_with 200 }
     end
 
@@ -53,7 +58,7 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
       end
 
       it 'return just the product that belong to the user' do
-        products_response = json_response
+        products_response = json_response[:products]
         products_response.each do |product_response|
           expect(product_response[:user][:email]).to eq @user.email
         end

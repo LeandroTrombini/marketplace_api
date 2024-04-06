@@ -6,6 +6,18 @@ class ApplicationController < ActionController::API
   rescue_from ActiveRecord::RecordInvalid, with: :record_invalid
   include Authenticable
 
+  protected
+
+  def pagination(per_page, total_pages, total_count)
+    {
+      pagination: {
+        per_page:,
+        total_pages:,
+        total_objects: total_count
+      }
+    }
+  end
+
   private
 
   def record_not_found(exception)

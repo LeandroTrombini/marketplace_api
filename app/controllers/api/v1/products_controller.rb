@@ -7,7 +7,8 @@ module Api
       respond_to :json
 
       def index
-        respond_with Product.search(params)
+        @products = Product.search(params).page(params[:page]).per(params[:per_page])
+        render json: @products, meta: pagination(@products.total_count, params[:page], params[:per_page]), adapter: :json
       end
 
       def show
